@@ -1,0 +1,131 @@
+body {
+  font-family: 'Roboto';
+  background-color: #000000;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.info__container {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fafafa;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px;
+  text-align: center;
+  user-select: none;
+
+}
+
+.info__time {
+  font-size: 70px;
+  font-weight: bold;
+}
+
+.info__date {
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.weather__container {
+  display: flex;
+  align-items: center;
+}
+
+.weather__icon {
+  font-size: 30px;
+  margin-right: 5px;
+}
+
+.weather__content {
+  font-size: 20px;
+}
+
+.launcher {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 100vw;
+}
+
+.launcher__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 120px;
+  margin: 5px;
+  user-select: none;
+}
+
+.launcher__item img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  user-select: none;
+}
+
+.launcher__item span {
+  font-size: 15px;
+  font-weight: bold;
+  user-select: none;
+}
+
+.launcher__item:hover {
+  background-color: #715BFF;
+  color: #ffffff;
+  user-select: none;
+}
+
+        /* Nuevo estilo para el botón con imagen */
+        .launcher__item-image {
+          /* Copia los estilos básicos del launcher__item */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          background-color: #fafafa;
+          border-radius: 20px;
+          padding: 20px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: 120px;
+          margin: 5px;
+          user-select: none;
+      }
+
+      .launcher__item-image img {
+          width: 100%; /* Ajusta el tamaño de la imagen */
+          height: 100%; /* Ajusta el tamaño de la imagen */
+          margin-bottom: 10px;
+          user-select: none;
+      }
+
+      .launcher__item-image span {
+          font-size: 15px;
+          font-weight: bold;
+          user-select: none;
+      }
+
+      .launcher__item-image:hover {
+          background-color: #715BFF;
+          color: #ffffff;
+          user-select: none;
+      }

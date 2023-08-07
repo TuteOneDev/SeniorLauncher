@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script>
+    function init() {
+      showTimeAndDate();
+      initBatteryInfo();
+      setInterval(showTimeAndDate, 1000);
+    }
+
+    function showTimeAndDate() {
+      const currentDate = new Date();
+      const formattedTime = formatTwoDigits(currentDate.getHours()) + ':' + formatTwoDigits(currentDate.getMinutes());
+      document.getElementById('hora').textContent = formattedTime;
+
+      const formattedDate = currentDate.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      document.getElementById('fecha').textContent = formattedDate;
+    }
+
+    function formatTwoDigits(number) {
+      return number < 10 ? '0' + number : number;
+    }
+
+    function initBatteryInfo() {
+      if ('getBattery' in navigator) {
+        navigator.getBattery().then(function (battery) {
+          updateBatteryInfo(battery);
+          battery.addEventListener('levelchange', function () {
+            updateBatteryInfo(battery);
+          });
+        });
+      } else {
+        document.getElementById('batteryPercentage').textContent = 'No se puede acceder a la información de la batería.';
+      }
+    }
+
+    function updateBatteryInfo(battery) {
+      var percentage = Math.floor(battery.level * 100);
+      document.getElementById('batteryPercentage').textContent = percentage + '%';
+    }
+
+    window.onload = init;
+
+    function openApp(appName) {
+      switch (appName) {
+        case 'phone':
+          window.location.href = 'apps/telefono.html';
+          break;
+        case 'clock':
+        window.location.href = 'apps/reloj.html';
+          break;
+        case 'messages':
+        window.location.href = 'apps/mensajes.html';
+          break;
+        case 'camera':
+        window.location.href = 'apps/camera.html';
+          break;
+        case 'help':
+        window.location.href = 'help.html';
+          break;
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="info__container">
+    <span class="info__time" id="hora">10:30</span>
+    <span class="info__date" id="fecha">20 Julio 2023</span>
+    <div class="weather__container">
+      <span class="weather__icon">☀️</span>
+      <span class="weather__content">25°C</span>
+      <span class="weather__icon">🔋</span>
+      <span class="weather__content" id="batteryPercentage">60%</span>
+    </div>
+  </div>
+  <div class="launcher">
+    <div class="launcher__item" onclick="openApp('phone')">
+        <span style="font-size: 40px;">📞</span>
+        <span>Teléfono</span>
+      </div>
+      <div class="launcher__item" onclick="openApp('clock')">
+        <span style="font-size: 40px;">⏰</span>
+        <span>Reloj</span>
+      </div>
+      <div class="launcher__item" onclick="openApp('messages')">
+        <span style="font-size: 40px;">💬</span>
+        <span>Mensajes</span>
+      </div>
+      <div class="launcher__item" onclick="openApp('camera')">
+        <span style="font-size: 40px;">📷</span>
+        <span>Cámara</span>
+      </div>
+      <div class="launcher__item">
+        <span style="font-size: 40px;">🆘</span>
+        <span>Ayuda</span>
+      </div>
+    <!-- Agregar más íconos de aplicaciones aquí -->
+  </div>
+</body>
+</html>
