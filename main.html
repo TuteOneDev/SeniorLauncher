@@ -6,6 +6,9 @@
   <title>Home</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
   <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    /* Agrega aquí el CSS que proporcioné anteriormente */
+  </style>
   <script>
     function init() {
       showTimeAndDate();
@@ -48,6 +51,29 @@
       document.getElementById('batteryPercentage').textContent = percentage + '%';
     }
 
+    function openSOSPopup() {
+      const overlay = document.getElementById('overlay');
+      const popup = document.getElementById('popup');
+      const sosSound = document.getElementById('sosSound');
+
+      overlay.style.display = 'block';
+      popup.style.display = 'block';
+      sosSound.play();
+      document.body.classList.add('blink');
+    }
+
+    function stopSOS() {
+      const overlay = document.getElementById('overlay');
+      const popup = document.getElementById('popup');
+      const sosSound = document.getElementById('sosSound');
+
+      overlay.style.display = 'none';
+      popup.style.display = 'none';
+      sosSound.pause();
+      sosSound.currentTime = 0; // Reiniciar la reproducción al detener
+      document.body.classList.remove('blink');
+    }
+
     window.onload = init;
 
     function openApp(appName) {
@@ -56,16 +82,16 @@
           window.location.href = 'apps/telefono.html';
           break;
         case 'clock':
-        window.location.href = 'apps/reloj.html';
+          window.location.href = 'apps/reloj.html';
           break;
         case 'messages':
-        window.location.href = 'apps/mensajes.html';
+          window.location.href = 'apps/mensajes.html';
           break;
         case 'camera':
-        window.location.href = 'apps/camera.html';
+          window.location.href = 'apps/camera.html';
           break;
         case 'help':
-        window.location.href = 'help.html';
+          openSOSPopup();
           break;
       }
     }
@@ -76,34 +102,42 @@
     <span class="info__time" id="hora">10:30</span>
     <span class="info__date" id="fecha">20 Julio 2023</span>
     <div class="weather__container">
-      <span class="weather__icon">☀️</span>
-      <span class="weather__content">25°C</span>
-      <span class="weather__icon">🔋</span>
+      <img src="./icons/rain.png" alt="clima" style="width: 50px;">
+      <span class="weather__content">17°C</span>
+      <img src="./icons/batery_full.png" alt="battery" style="width: 50px">
       <span class="weather__content" id="batteryPercentage">60%</span>
     </div>
   </div>
   <div class="launcher">
     <div class="launcher__item" onclick="openApp('phone')">
-        <span style="font-size: 40px;">📞</span>
-        <span>Teléfono</span>
-      </div>
-      <div class="launcher__item" onclick="openApp('clock')">
-        <span style="font-size: 40px;">⏰</span>
-        <span>Reloj</span>
-      </div>
-      <div class="launcher__item" onclick="openApp('messages')">
-        <span style="font-size: 40px;">💬</span>
-        <span>Mensajes</span>
-      </div>
-      <div class="launcher__item" onclick="openApp('camera')">
-        <span style="font-size: 40px;">📷</span>
-        <span>Cámara</span>
-      </div>
-      <div class="launcher__item">
-        <span style="font-size: 40px;">🆘</span>
-        <span>Ayuda</span>
-      </div>
+      <img src="./icons/phone.png" alt="Teléfono Icono">
+      <span>Teléfono</span>
+    </div>
+    <div class="launcher__item" onclick="openApp('clock')">
+      <img src="./icons/clock.png" alt="Reloj Icono">
+      <span>Reloj</span>
+    </div>
+    <div class="launcher__item" onclick="openApp('messages')">
+      <img src="./icons/sms.png" alt="Mensajes Icono">
+      <span>Mensajes</span>
+    </div>
+    <div class="launcher__item" onclick="openApp('camera')">
+      <img src="./icons/camera.png" alt="Camera Icono">
+      <span>Cámara</span>
+    </div>
+    <div class="launcher__item" onclick="openApp('help')">
+      <img src="./icons/SOS.png" alt="SOS Icono">
+      <span>Ayuda</span>
+    </div>
     <!-- Agregar más íconos de aplicaciones aquí -->
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="popup">
+    <h2 class="blink">SOS</h2>
+    <audio id="sosSound" loop>
+      <source src="./sounds/sos.wav" type="audio/wav">
+    </audio>
+    <button onclick="stopSOS()" class="stop-button">🛑DETENER ALARMA🤚</button>
   </div>
 </body>
 </html>
