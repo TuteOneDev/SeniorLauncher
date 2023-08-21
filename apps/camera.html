@@ -1,37 +1,173 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teléfono</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
-    <link rel="stylesheet" type="text/css" href="../styles.css">
-    <style>
-        .launcher__item {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            text-decoration: none;
-            color: #000;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="../styles.css">
+<style>
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  #camera {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    width: 100%;
+    max-width: 95%;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+  #preview {
+    height: 400px;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #ccc;
+  }
+  #buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafafa;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 55px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 120px;
+    margin: 5px;
+    user-select: none;
+    color:#000000;
+    }
 
-        .launcher__item span:first-child {
-            font-size: 24px;
-            margin-right: 5px;
-        }
-    </style>
+    button:hover {
+    background-color: #715BFF;
+    color: #ffffff;
+    user-select: none;
+    }
+</style>
+<title>Camera App Prototype</title>
 </head>
-
 <body>
-    <div>
-        <a class="launcher__item" href="../main.html">
-            <span>←</span>
-            <span>Volver al inicio</span>
-        </a>
-    </div>
+<div id="camera">
+  <video id="preview" autoplay></video>
+</div>
+<div id="buttons">
+  <button id="captureBtn">📷</button>
+  <button id="recordBtn">📹</button>
+  <button id="switchCameraBtn">🔄️</button>
+</div>
+<div>
+    <a class="launcher__item" href="../main.html">
+        <span>←</span>
+        <span>Volver al inicio</span>
+    </a>
+</div>
+<div></div>
+<script>
+    const preview = document.getElementById("preview");
+    const captureBtn = document.getElementById("captureBtn");
+    const recordBtn = document.getElementById("recordBtn");
+    const switchCameraBtn = document.getElementById("switchCameraBtn");
+    let isRecording = false;
+    let currentCamera = "user";
+  
+    // Set up camera stream
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: currentCamera }
+        });
+        preview.srcObject = stream;
+      } catch (error) {
+        console.error("Error accessing camera:", error);
+      }
+    }
+  
+    // Capture photo
+    captureBtn.addEventListener("click", () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = preview.videoWidth;
+      canvas.height = preview.videoHeight;
+      canvas.getContext("2d").drawImage(preview, 0, 0, canvas.width, canvas.height);
+      const photoURL = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = photoURL;
+      link.download = "photo.png";
+      link.click();
+    });
+  
+    // Record video
+    recordBtn.addEventListener("click", () => {
+      if (!isRecording) {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    });
+  
+    // Switch camera
+    switchCameraBtn.addEventListener("click", () => {
+      currentCamera = currentCamera === "user" ? "environment" : "user";
+      startCamera();
+    });
+  
+    // Start recording
+    let mediaRecorder;
+    function startRecording() {
+      const stream = preview.srcObject;
+      const recordedChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+  
+      mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+          recordedChunks.push(event.data);
+        }
+      };
+  
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: "video/mp4" });
+        const videoURL = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = videoURL;
+        link.download = "video.mp4";
+        link.click();
+      };
+  
+      mediaRecorder.start();
+      isRecording = true;
+      recordBtn.textContent = "Detener Grabación";
+    }
+  
+    // Stop recording
+    function stopRecording() {
+      mediaRecorder.stop();
+      isRecording = false;
+      recordBtn.textContent = "Grabar";
+    }
+  
+    // Initialize camera on page load
+    startCamera();
+  </script>
 </body>
-
 </html>
