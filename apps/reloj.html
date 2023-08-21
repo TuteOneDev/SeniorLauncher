@@ -3,35 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teléfono</title>
+    <title>Reloj y Alarmas</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
     <link rel="stylesheet" type="text/css" href="../styles.css">
-    <style>
-        .launcher__item {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            text-decoration: none;
-            color: #000;
-        }
-
-        .launcher__item span:first-child {
-            font-size: 24px;
-            margin-right: 5px;
-        }
-    </style>
 </head>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        color: #fff;
+    }
+
+    .clock-app {
+        background-color: #000;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .clock {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .add-alarm-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        cursor: pointer;
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .alarm-list {
+        list-style-type: none;
+        padding: 0;
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .alarm-item {
+        background-color: #fafafa;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .alarm-time {
+        font-size: 20px;
+        color: #000000;
+    }
+
+    .delete-button {
+        font-size: 15px;
+        margin: 5px;
+        color: white;
+        background-color: rgb(213, 43, 43);
+        padding: 8px 10px;
+        border-radius: 25%;
+        cursor: pointer;
+        border: none;
+    }
+
+    .footer {
+        background-color: #000;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .back-button {
+        font-size: 24px;
+        color: white;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .back-button span {
+        margin-right: 5px;
+    }
+
+    .popup {
+        display: none;
+        color: #000000;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fafafa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .popup-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .popup input[type="time"] {
+        font-size: 18px;
+        padding: 8px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .popup button {
+        background-color: #715BFF;
+        color: #000000;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+</style>
 
 <body>
-    <div>
+    <div class="footer">
+        <div class="info__time" id="clock">12:00:00</div>
+    </div>
+        <div class="scrollable-container">
+        <ul class="alarm-list" id="alarmList">
+            <!-- Las alarmas se añadirán aquí dinámicamente -->
+        </ul>
+
+    </div>
+
+    <div class="footer">
         <a class="launcher__item" href="../main.html">
-            <span>←</span>
+            <img src="../icons/back.png" alt="back Icono">
             <span>Volver al inicio</span>
         </a>
+        <a class="launcher__item" onclick="showAlarmPopup()">
+            <img src="../icons/add.png" alt="add Icono">
+            <span>Añadir Alarma</span>
+        </a>
     </div>
-</body>
 
+    <div class="popup" id="alarmPopup">
+        <div class="popup-content">
+            <h2>Configurar Alarma</h2>
+            <input type="time" class="alarm-input" id="alarmTime">
+            <button class="confirm-button" onclick="setAlarm()">Confirmar</button>
+        </div>
+    </div>
+
+    <script>
+        function showAlarmPopup() {
+            const popup = document.getElementById('alarmPopup');
+            popup.style.display = 'block';
+        }
+
+        function setAlarm() {
+            const alarmTimeInput = document.getElementById('alarmTime');
+            const alarmTime = alarmTimeInput.value;
+
+            if (alarmTime) {
+                const alarmList = document.getElementById('alarmList');
+                const alarmItem = document.createElement('li');
+                alarmItem.className = 'alarm-item';
+                alarmItem.innerHTML = `<span class="alarm-time">${alarmTime}</span> <button class="delete-button" onclick="removeAlarm(this)">X</button>`;
+                alarmList.appendChild(alarmItem);
+
+                alarmTimeInput.value = ''; // Limpiar el campo de entrada
+                closeAlarmPopup();
+            } else {
+                alert('Por favor, ingresa una hora válida para la alarma.');
+            }
+        }
+
+        function closeAlarmPopup() {
+            const popup = document.getElementById('alarmPopup');
+            popup.style.display = 'none';
+        }
+
+        function updateTime() {
+            const clockElement = document.getElementById('clock');
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const currentTime = hours + ':' + minutes + ':' + seconds;
+            clockElement.textContent = currentTime;
+        }
+
+        function removeAlarm(button) {
+            const alarmItem = button.parentElement;
+            const alarmList = document.getElementById('alarmList');
+            alarmList.removeChild(alarmItem);
+        }
+
+        updateTime(); // Actualizar el reloj al cargar la página
+        setInterval(updateTime, 1000); // Actualizar el reloj cada segundo
+    </script>
+</body>
 </html>
+
+
